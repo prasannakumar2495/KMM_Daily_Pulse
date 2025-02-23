@@ -38,7 +38,7 @@ class ArticlesViewModel : BaseViewModel() {
                 if (fetchedArticles.isNotEmpty())
                     _articlesState.emit(ArticlesState(articles = fetchedArticles))
                 else
-                    _articlesState.emit(ArticlesState(error = "ERROR"))
+                    _articlesState.emit(ArticlesState(error = "Unexpected Error!"))
             } catch (e: Exception) {
                 println("EXCEPTION: " + e.message)
             }
