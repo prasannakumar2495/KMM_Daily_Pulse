@@ -83,15 +83,15 @@ struct ArticleItemView:View {
     var article: Articles
     var body: some View {
         VStack(alignment: .leading,spacing: 8){
-            AsyncImage(url: URL(string: article.imageUrl)!){ phase in
-                if phase.image != nil {
-                    phase.image?.resizable().aspectRatio(contentMode: .fit)
-                }else if phase.error != nil {
-                    Text("Image Load Error")
-                } else {
-                    ProgressView()
-                }
-            }
+//            AsyncImage(url: URL(string: article.imageUrl)!){ phase in
+//                if phase.image != nil {
+//                    phase.image?.resizable().aspectRatio(contentMode: .fit)
+//                }else if phase.error != nil {
+//                    Text("Image Load Error")
+//                } else {
+//                    ProgressView()
+//                }
+//            }
             Text(article.title).font(.title).fontWeight(.bold)
             Text(article.desc)
             Text(article.date).frame(maxWidth: .infinity, alignment: .trailing).foregroundStyle(.gray)

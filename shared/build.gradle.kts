@@ -22,7 +22,7 @@ kotlin {
 	).forEach {
 		it.binaries.framework {
 			baseName = "shared"
-			isStatic = true
+			isStatic = false
 		}
 	}
 	
@@ -35,7 +35,8 @@ kotlin {
 			implementation(libs.kotlinx.datetime)
 			implementation(libs.koin.core)
 			implementation(libs.sql.coroutines.extensions)
-			implementation("co.touchlab:stately-common:1.2.0")
+			//Do not change below version, its giving exception
+			implementation(libs.stately.common)
 		}
 		androidMain.dependencies {
 			implementation(libs.androidx.lifecycle.viewmodel.ktx)
@@ -45,8 +46,6 @@ kotlin {
 		iosMain.dependencies {
 			implementation(libs.ktor.client.darwin)
 			implementation(libs.sql.native.driver)
-			implementation(libs.stately.isolate)
-			implementation(libs.stately.iso.collections)
 		}
 		commonTest.dependencies {
 			implementation(libs.kotlin.test)

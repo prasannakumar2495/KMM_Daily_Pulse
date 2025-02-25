@@ -1,4 +1,4 @@
-package com.pk.dailypulse.articles
+package com.pk.dailypulse.articles.repo
 
 import com.pk.dailypulse.articles.response.ArticleRaw
 import com.pk.dailypulse.articles.response.ArticlesResponse
