@@ -1,6 +1,6 @@
 package com.pk.dailypulse.articles.useCase
 
-import com.pk.dailypulse.articles.Articles
+import com.pk.dailypulse.articles.data.Articles
 import com.pk.dailypulse.articles.repo.ArticlesRepo
 import com.pk.dailypulse.articles.response.ArticleRaw
 import kotlinx.datetime.Clock

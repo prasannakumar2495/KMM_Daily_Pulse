@@ -1,4 +1,4 @@
-package com.pk.dailypulse.articles
+package com.pk.dailypulse.articles.data
 
 data class Articles(
     val title: String = "",

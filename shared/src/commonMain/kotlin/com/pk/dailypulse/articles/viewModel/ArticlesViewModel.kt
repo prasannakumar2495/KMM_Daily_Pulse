@@ -1,7 +1,7 @@
 package com.pk.dailypulse.articles.viewModel
 
 import com.pk.dailypulse.BaseViewModel
-import com.pk.dailypulse.articles.ArticlesState
+import com.pk.dailypulse.articles.data.ArticlesState
 import com.pk.dailypulse.articles.useCase.ArticlesUseCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
