@@ -11,43 +11,50 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.pk.dailypulse.android.screens.AboutScreen
 import com.pk.dailypulse.android.screens.ArticlesScreen
+import com.pk.dailypulse.android.screens.ArticlesSourceScreen
 import com.pk.dailypulse.android.screens.Screen
 
 @Composable
 fun AppScaffold(
-    modifier: Modifier = Modifier
+	modifier: Modifier = Modifier,
 ) {
-    val navController = rememberNavController()
-
-    Scaffold {
-        AppNavHost(
-            navController = navController,
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(it)
-        )
-    }
+	val navController = rememberNavController()
+	
+	Scaffold {
+		AppNavHost(
+			navController = navController,
+			modifier = modifier
+				.fillMaxWidth()
+				.padding(it)
+		)
+	}
 }
 
 @Composable
 fun AppNavHost(
-    navController: NavHostController,
-    modifier: Modifier
+	navController: NavHostController,
+	modifier: Modifier,
 ) {
-    NavHost(
-        navController = navController,
-        startDestination = Screen.ARTICLES.route,
-        modifier = modifier
-    ) {
-        composable(Screen.ARTICLES.route) {
-            ArticlesScreen(
-                modifier = Modifier
-            ) {
-                navController.navigate(Screen.ABOUT_DEVICE.route)
-            }
-        }
-        composable(Screen.ABOUT_DEVICE.route) {
-            AboutScreen { navController.popBackStack() }
-        }
-    }
+	NavHost(
+		navController = navController,
+		startDestination = Screen.ARTICLES.route,
+		modifier = modifier
+	) {
+		composable(Screen.ARTICLES.route) {
+			ArticlesScreen(
+				modifier = Modifier,
+				onSourceClick = {
+					navController.navigate(Screen.ARTICLES_SOURCE.route)
+				}
+			) {
+				navController.navigate(Screen.ABOUT_DEVICE.route)
+			}
+		}
+		composable(Screen.ABOUT_DEVICE.route) {
+			AboutScreen { navController.popBackStack() }
+		}
+		composable(Screen.ARTICLES_SOURCE.route) {
+			ArticlesSourceScreen { navController.popBackStack() }
+		}
+	}
 }
