@@ -11,7 +11,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -26,6 +25,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.pk.dailypulse.articles.Articles
 import com.pk.dailypulse.articles.viewModel.ArticlesViewModel
 import org.koin.androidx.compose.getViewModel
@@ -34,88 +35,80 @@ import org.koin.androidx.compose.getViewModel
 fun ArticlesScreen(
 	modifier: Modifier = Modifier,
 	articlesViewModel: ArticlesViewModel = getViewModel(),
-	onAboutButtonClick: () -> Unit
+	onAboutButtonClick: () -> Unit,
 ) {
-    val articlesState = articlesViewModel.articlesState.collectAsState()
-
-    Column(modifier = modifier) {
-        AppBar(onAboutButtonClick)
-
-        if (articlesState.value.loading)
-            Loader()
-        if (articlesState.value.error != null)
-            ErrorMessage(articlesState.value.error ?: "")
-        if (articlesState.value.articles.isNotEmpty())
-            ArticlesListView(articlesState.value.articles)
-    }
-
+	val articlesState = articlesViewModel.articlesState.collectAsState()
+	
+	Column(modifier = modifier) {
+		AppBar(onAboutButtonClick)
+		
+		if (articlesState.value.error != null)
+			ErrorMessage(articlesState.value.error ?: "")
+		if (articlesState.value.articles.isNotEmpty())
+			ArticlesListView(articlesViewModel)
+	}
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBar(onAboutButtonClick: () -> Unit) {
-    TopAppBar(title = { Text("Articles") },
-        actions = {
-            IconButton(onClick = onAboutButtonClick) {
-                Icon(
-                    imageVector = Icons.Outlined.Info,
-                    contentDescription = null
-                )
-            }
-        })
-}
-
-@Composable
-fun Loader() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        CircularProgressIndicator(
-            modifier = Modifier,
-            color = MaterialTheme.colorScheme.surfaceVariant,
-            trackColor = MaterialTheme.colorScheme.secondary
-        )
-    }
+	TopAppBar(title = { Text("Articles") },
+		actions = {
+			IconButton(onClick = onAboutButtonClick) {
+				Icon(
+					imageVector = Icons.Outlined.Info,
+					contentDescription = null
+				)
+			}
+		})
 }
 
 @Composable
 fun ErrorMessage(error: String) {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text(text = error, style = MaterialTheme.typography.bodyLarge, textAlign = TextAlign.Center)
-    }
+	Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+		Text(text = error, style = MaterialTheme.typography.bodyLarge, textAlign = TextAlign.Center)
+	}
 }
 
 @Composable
-fun ArticlesListView(articles: List<Articles>) {
-    LazyColumn {
-        items(items = articles) {
-            ArticleItemView(it)
-        }
-    }
+fun ArticlesListView(viewModel: ArticlesViewModel) {
+	SwipeRefresh(
+		state = SwipeRefreshState(viewModel.articlesState.value.loading),
+		onRefresh = {
+			viewModel.getArticles(true)
+		}) {
+		LazyColumn {
+			items(items = viewModel.articlesState.value.articles) {
+				ArticleItemView(it)
+			}
+		}
+	}
 }
 
 @Composable
 fun ArticleItemView(article: Articles) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    ) {
-        AsyncImage(
-            modifier = Modifier
-                .fillMaxWidth(),
-            model = article.imageUrl,
-            contentDescription = null,
-            contentScale = ContentScale.FillBounds
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(text = article.title, style = MaterialTheme.typography.headlineSmall)
-        Spacer(Modifier.height(4.dp))
-        Text(text = article.desc, style = MaterialTheme.typography.bodyMedium)
-        Spacer(Modifier.height(4.dp))
-        Text(
-            modifier = Modifier.fillMaxWidth(),
-            text = article.date,
-            style = MaterialTheme.typography.bodySmall,
-            textAlign = TextAlign.End
-        )
-    }
+	Column(
+		modifier = Modifier
+			.fillMaxWidth()
+			.padding(16.dp)
+	) {
+		AsyncImage(
+			modifier = Modifier
+				.fillMaxWidth(),
+			model = article.imageUrl,
+			contentDescription = null,
+			contentScale = ContentScale.FillBounds
+		)
+		Spacer(modifier = Modifier.height(4.dp))
+		Text(text = article.title, style = MaterialTheme.typography.headlineSmall)
+		Spacer(Modifier.height(4.dp))
+		Text(text = article.desc, style = MaterialTheme.typography.bodyMedium)
+		Spacer(Modifier.height(4.dp))
+		Text(
+			modifier = Modifier.fillMaxWidth(),
+			text = article.date,
+			style = MaterialTheme.typography.bodySmall,
+			textAlign = TextAlign.End
+		)
+	}
 }
